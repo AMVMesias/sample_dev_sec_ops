@@ -2,16 +2,138 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Demo DevSecOps</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard DevSecOps</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --success: #16a34a;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 600px;
+      background: var(--card);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: var(--primary);
+      margin-top: 0;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 0.5rem;
+    }
+
+    .status-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding: 0.75rem;
+      background: #f1f5f9;
+      border-radius: 8px;
+    }
+
+    .badge {
+      background: var(--success);
+      color: white;
+      padding: 0.25rem 0.6rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      margin-right: 1rem;
+    }
+
+    .info {
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: #64748b;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 1rem;
+    }
+
+    code {
+      background: #f1f5f9;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+
+    .api-status {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border: 1px solid var(--primary);
+      border-radius: 8px;
+      color: var(--primary);
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-  <h1>Pipeline DevSecOps </h1>
-  <p>Esta página fue desplegada automáticamente solo si:</p>
-  <ul>
-    <li>(ok) Las pruebas pasaron (CI)</li>
-    <li>(ok) El escaneo de dependencias no encontró vulnerabilidades altas (Sec)</li>
-    <li>(ok) El deploy fue autorizado (CD)</li>
-  </ul>
-  <p>Revisa el workflow en <code>.github/workflows/devsecops.yml</code>.</p>
+  <div class="container">
+    <h1>🚀 Dashboard DevSecOps</h1>
+    <p>Estado del despliegue automático:</p>
+    
+    <ul class="status-list">
+      <li class="status-item">
+        <span class="badge">OK</span>
+        <span>Pruebas unitarias pasaron (CI)</span>
+      </li>
+      <li class="status-item">
+        <span class="badge">OK</span>
+        <span>Escaneo de dependencias limpio (Sec)</span>
+      </li>
+      <li class="status-item">
+        <span class="badge">OK</span>
+        <span>Deploy autorizado (CD)</span>
+      </li>
+    </ul>
+
+    <div id="api-data" class="api-status">
+      Cargando datos del servidor...
+    </div>
+
+    <div class="info">
+      <p>Configuración en <code>.github/workflows/devsecops.yml</code></p>
+    </div>
+  </div>
+
+  <script>
+    // Pequeño script para conectar con el backend
+    async function fetchRisk() {
+      try {
+        const response = await fetch('http://localhost:3000/');
+        const data = await response.json();
+        document.getElementById('api-data').innerHTML = `
+          <strong>Servidor:</strong> ${data.message}<br>
+          <strong>Nivel de Riesgo:</strong> ${data.riskLevel}
+        `;
+      } catch (error) {
+        document.getElementById('api-data').style.color = 'red';
+        document.getElementById('api-data').innerText = 'Servidor no detectado (Asegúrate de correr npm start)';
+      }
+    }
+    fetchRisk();
+  </script>
 </body>
 </html>
